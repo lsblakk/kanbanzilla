@@ -193,8 +193,6 @@ angular.module('kanbanzillaApp')
           url: BASE_URL + '/user',
           params: {
             match: name,
-            username: name,
-            password: pass
           }
         });
       },
