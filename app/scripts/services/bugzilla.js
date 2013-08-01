@@ -12,8 +12,10 @@ angular.module('kanbanzillaApp')
 
     var TEST_URL = 'https://api-dev.bugzilla.mozilla.org/test/latest',
         PROD_URL = 'https://api-dev.bugzilla.mozilla.org/latest',
-        BASE_URL = PROD_URL;
+        PROXY_URL = '/api',
+        // BASE_URL = PROD_URL;
         // BASE_URL = TEST_URL;
+        BASE_URL = PROXY_URL;
 
     var cache = {};
 
@@ -184,6 +186,8 @@ angular.module('kanbanzillaApp')
       },
 
       attemptLogin: function(name, pass) {
+        this.attemptServerLogin(name, pass);
+
         return $http({
           method: 'GET',
           url: BASE_URL + '/user',
@@ -193,6 +197,13 @@ angular.module('kanbanzillaApp')
             password: pass
           }
         });
+      },
+
+      attemptServerLogin: function (name, pass) {
+        $http.post('/api/login', {login: name, password: pass})
+          .success(function (data) {
+            console.log(data);
+          });
       }
 
     };

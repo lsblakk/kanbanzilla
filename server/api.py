@@ -31,13 +31,20 @@ bugzilla_url = 'https://api-dev.bugzilla.mozilla.org/latest'
 def board_endpoint(board_id):
   return 'this is the board endpoint'
 
+@app.route('/api/login', methods=['POST'])
+def login():
+  # print(request.data['login'])
+  print(request.json)
+  # print(request.data['password'])
+  return 'login endpoint'
+
 @app.route('/api/<path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def api_proxy(path):
-  print(request.args)
-  print(request.form)
-  print(path)
+  # print(request.args)
+  # print(request.form)
+  # print(path)
   r = requests.request(request.method, bugzilla_url + '/{0}'.format(path), params=request.args, data=request.form)
-  print(r.status_code)
+  # print(r.status_code)
   return r.text
 
 @app.route('/', defaults={'path':''})
