@@ -6,17 +6,6 @@ import uuid
 
 app = Flask(__name__)
 
-
-# class BoardList(restful.Resource):
-#   def get(self):
-#     r = requests.post(login_url, data=login_payload)
-#     # store these two cookies and the username in a session if successful
-#     print(r.cookies.has_key('Bugzilla_login'))
-#     print(r.cookies['Bugzilla_login'])
-#     print(r.cookies['Bugzilla_logincookie'])
-#     return {'Bugzilla_login': r.cookies['Bugzilla_login'], 'Bugzilla_logincookie': r.cookies['Bugzilla_logincookie']}
-
-
 login_url = 'https://bugzilla.mozilla.org/index.cgi'
 bugzilla_url = 'https://api-dev.bugzilla.mozilla.org/latest'
 
@@ -33,6 +22,7 @@ def logintest():
   # look up the person with their cookie
   print(users)
   cookie_token = str(request.cookies.get('token'))
+  print(cookie_token)
   if cookie_token is not None:
     if users.has_key(cookie_token):
       user = users[cookie_token]
@@ -42,6 +32,17 @@ def logintest():
   else:
     return 'No cookie, sorry'
 
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+  cookie_token = str(request.cookies.get('token'))
+  response = make_response('logout')
+  response.set_cookie('token', '', expires=0)
+  response.set_cookie('username', '', expires=0)
+  if cookie_token is not None:
+    if users.has_key(cookie_token):
+      users.pop(cookie_token, None)
+  return response
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -67,6 +68,7 @@ def login():
     login_response['token'] = token
     response = make_response(json.dumps(login_response))
     response.set_cookie('token', token)
+    response.set_cookie('username', request.json['login'])
     return response
   else:
     print('login failed')

@@ -28,7 +28,7 @@ angular.module('kanbanzillaApp')
           .success(function (data) {
             response.action = 'login';
             response.data = data;
-            bugzillaAuth.login($scope.login.username, $scope.login.password);
+            bugzillaAuth.login($scope.login.username);
             dialog.close(response);
           })
           .error(function (data) {
