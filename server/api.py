@@ -89,14 +89,14 @@ def augment_with_auth(request_arguments, cookie_token):
 def api_proxy(path):
   path = str(path)
   cached_response = cache.get(request.url)
-  if cached_response is not None:
-    return cached_response
-  request_arguments = dict(request.args)
-  cookie_token = str(request.cookies.get('token'))
-  augment_with_auth(request_arguments, cookie_token)
-  r = requests.request(request.method, bugzilla_url + '/{0}'.format(path), params=request_arguments, data=request.form)
-  cache.set(request.url, r.text)
-  return cache.get(request.url)
+  if cached_response is None:
+    request_arguments = dict(request.args)
+    cookie_token = str(request.cookies.get('token'))
+    augment_with_auth(request_arguments, cookie_token)
+    r = requests.request(request.method, bugzilla_url + '/{0}'.format(path), params=request_arguments, data=request.form)
+    cache.set(request.url, r.text)
+    cached_response = r.text
+  return cached_response
 
 
 @app.route('/', defaults={'path':''})

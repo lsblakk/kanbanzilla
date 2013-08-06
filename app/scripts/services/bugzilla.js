@@ -52,7 +52,7 @@ angular.module('kanbanzillaApp')
           method: 'GET',
           url: BASE_URL + '/bug',
           params: searchParams,
-          cache: true
+          // cache: true
         });
       },
 
