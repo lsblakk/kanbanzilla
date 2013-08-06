@@ -31,44 +31,6 @@ angular.module('kanbanzillaApp')
         return $http.get('config.json');
       },
 
-      getProducts: function () {
-        var deferred = $q.defer();
-        deferred.promise.success = deferred.promise.then;
-
-        if(cache.products) {
-          console.log('grabbing from cache');
-          $timeout(function() {
-            deferred.resolve(cache.products);
-          },1);
-        }
-        else {
-          $http.get(BASE_URL + '/configuration')
-            .success(function (data) {
-              var products = [];
-              for(var product in data.product) {
-                products.push(product);
-              }
-              cache.products = products;
-              deferred.resolve(products);
-            })
-            .error(function(data){
-              deferred.resolve(data);
-            });
-        }
-        return deferred.promise;
-      },
-
-      getAllComponents: function () {
-        $http.get(BASE_URL + '/configuration')
-          .success(function (data) {
-            console.log(data);
-          });
-      },
-
-      getComponentsForProduct: function () {
-
-      },
-
       /* BUGS=============== */
 
       getLink: function (id) {
@@ -89,7 +51,8 @@ angular.module('kanbanzillaApp')
         return $http({
           method: 'GET',
           url: BASE_URL + '/bug',
-          params: searchParams
+          params: searchParams,
+          cache: true
         });
       },
 
@@ -185,23 +148,20 @@ angular.module('kanbanzillaApp')
         return $http.get(BASE_URL + '/user/' + id);
       },
 
-      attemptLogin: function(name, pass) {
-        this.attemptServerLogin(name, pass);
+      // attemptLogin: function(name, pass) {
+      //   this.attemptServerLogin(name, pass);
 
-        return $http({
-          method: 'GET',
-          url: BASE_URL + '/user',
-          params: {
-            match: name,
-          }
-        });
-      },
+      //   return $http({
+      //     method: 'GET',
+      //     url: BASE_URL + '/user',
+      //     params: {
+      //       match: name,
+      //     }
+      //   });
+      // },
 
-      attemptServerLogin: function (name, pass) {
-        $http.post('/api/login', {login: name, password: pass})
-          .success(function (data) {
-            console.log(data);
-          });
+      attemptLogin: function (name, pass) {
+        return $http.post(BASE_URL + '/login', {login: name, password: pass});
       }
 
     };

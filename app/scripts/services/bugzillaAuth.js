@@ -17,7 +17,7 @@ angular.module('kanbanzillaApp')
       }
     }
 
-    function bugzillaLogout () {
+    function removeCookies () {
       return $http.post('/api/logout', {confirm: true});
     }
 
@@ -27,13 +27,13 @@ angular.module('kanbanzillaApp')
 
       login: function (username) {
         user.username = username;
-        user.loggedIn = true
+        user.loggedIn = true;
       },
 
       logout: function () {
         user.username = '';
         user.loggedIn = false;
-        bugzillaLogout();
+        removeCookies();
       },
 
       isUserLoggedIn: function () {
