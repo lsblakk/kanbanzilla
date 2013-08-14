@@ -6,7 +6,7 @@ import collections
 import urllib
 
 import pytz
-from flask import Flask, request, make_response, abort, jsonify
+from flask import Flask, request, make_response, abort, jsonify, send_file
 from flask.views import MethodView
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -24,7 +24,7 @@ SQLALCHEMY_DATABASE_URI = os.environ.get(
 DAY = 60 * 60 * 24
 MONTH = DAY * 30
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../dist/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 
@@ -498,10 +498,8 @@ def api_proxy(path):
 @app.route('/', defaults={'path':''})
 @app.route('/<path:path>')
 def catch_all(path):
-    # when returning the index file if there is a cookie set that doesn't match a
-    # key in the users dict then the response should remove all cookies so that
-    # in the app users don't see they are logged in, if they aren't.
-    return 'should be the index.html file, let angular handle the route - {0}'.format(path)
+    path = path or 'index.html'
+    return send_file('../dist/%s' % path)
 
 
 app.add_url_rule('/api/board/<id>', view_func=BoardView.as_view('board'))
