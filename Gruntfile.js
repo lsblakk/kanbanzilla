@@ -265,7 +265,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,txt}',
             'config.json',
-            'components/**/*',
+            // 'components/**/*',
             'images/{,*/}*.{gif,webp}',
             'font/*'
           ]
@@ -297,7 +297,7 @@ module.exports = function (grunt) {
     // 'jshint',
     // 'test',
     'compass:dist',
-    // 'useminPrepare',
+    'useminPrepare',
     'imagemin',
     'concat',
     'cssmin',
@@ -306,7 +306,7 @@ module.exports = function (grunt) {
     'cdnify',
     // 'ngmin',
     'uglify',
-    // 'rev',
+    'rev',
     'usemin'
   ]);
 
