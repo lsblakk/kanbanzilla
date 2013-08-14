@@ -203,7 +203,7 @@ module.exports = function (grunt) {
         options: {
           removeCommentsFromCDATA: true,
           // https://github.com/yeoman/grunt-usemin/issues/44
-          //collapseWhitespace: true,
+          // collapseWhitespace: true,
           // collapseBooleanAttributes: true,
           // removeAttributeQuotes: true,
           // removeRedundantAttributes: true,
@@ -265,7 +265,6 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,txt}',
             'config.json',
-            '.htaccess',
             'components/**/*',
             'images/{,*/}*.{gif,webp}',
             'font/*'
@@ -298,16 +297,16 @@ module.exports = function (grunt) {
     // 'jshint',
     // 'test',
     'compass:dist',
-    'useminPrepare',
+    // 'useminPrepare',
     'imagemin',
     'concat',
     'cssmin',
     'htmlmin',
     'copy',
     'cdnify',
-    'ngmin',
+    // 'ngmin',
     'uglify',
-    'rev',
+    // 'rev',
     'usemin'
   ]);
 
