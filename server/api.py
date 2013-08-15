@@ -531,7 +531,7 @@ static-folder. Will try to fix this issue at some point in the future.
 """
 @app.route('/<regex("styles|scripts|views|images|font"):start>/<path:path>')
 def static_stuff(start, path):
-    return send_file('../dist/%s/%s' % (start, path))
+    return send_file('dist/%s/%s' % (start, path))
 
 
 @app.route('/', defaults={'path':''})
@@ -539,7 +539,7 @@ def static_stuff(start, path):
 def catch_all(path):
     # path = path or 'index.html'
     # return send_file('../dist/%s' % path)
-    return send_file('../dist/index.html')
+    return send_file('dist/index.html')
 
 
 app.add_url_rule('/api/board/<id>', view_func=BoardView.as_view('board'))
