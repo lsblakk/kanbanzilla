@@ -410,12 +410,13 @@ class BugView(MethodView):
 class ConfigView(MethodView):
     def get(self):
         config = cache_get('config')
-        if config is None:
+        if 1 or config is None:
             print "cache miss"
             r = requests.get(bugzilla_url + '/configuration')
-            config = r.text
+            config = json.loads(r.text)
+            print(config)
             cache_set('config', config)
-        return json.dumps(config)
+        return make_response(jsonify(config))
 
 def augment_with_auth(request_arguments, token):
     user_cache_key = 'auth:%s' % token
