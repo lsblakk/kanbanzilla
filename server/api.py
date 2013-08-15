@@ -227,12 +227,7 @@ class BoardView(MethodView):
 
         for bug in bug_data['bugs']:
             last_change_time = bug.pop('last_change_time')
-            if changed_after and last_change_time == changed_after:
-                # bugzilla is silly in that if you pass
-                # changed_after=2013-08-08T20:26:27Z to the query
-                # it will return bugs that have that last_change_time
-                # or greater rather than just greater
-                continue
+
             if last_change_time > latest_change_time:
                 latest_change_time = last_change_time
             # which named column should this go into?
@@ -416,7 +411,22 @@ def fetch_bugs(components, fields, token=None, bucket_requests=3,
             changed_after=changed_after,
         )
         for key in bug_data:
-            combined[key].extend(bug_data[key])
+            if key == 'bugs' and changed_after:
+                # For some ungodly reason, even if you pass `changed_after`
+                # into the bugzilla API you sometimes get bugs that were last
+                # updated BEFORE the `changed_after` parameter specifies.
+                # We suspect this is due to certain changes not incrementing
+                # the `last_change_time` on the bug. E.g. whiteboard changes.
+                # Also, the `changed_after` parameter does a:
+                # `last_change_time >= :changed_after` operation but we only
+                # want those that are greater than `:changed_after`.
+                bugs = [
+                    bug for bug in bug_data[key]
+                    if bug['last_change_time'] > changed_after
+                ]
+                combined[key].extend(bugs)
+            else:
+                combined[key].extend(bug_data[key])
 
     return combined
 
