@@ -405,12 +405,10 @@ class BugView(MethodView):
 class ConfigView(MethodView):
     def get(self):
         config = cache_get('config')
-        if 1 or config is None:
-            print "cache miss"
+        if config is None:
             r = requests.get(bugzilla_url + '/configuration')
             config = json.loads(r.text)
-            print(config)
-            cache_set('config', config)
+            cache_set('config', config, DAY)
         return make_response(jsonify(config))
 
 def augment_with_auth(request_arguments, token):
@@ -528,8 +526,8 @@ def api_proxy(path):
 
 
 """
-Workaround for grunt/yeoman being very no friendly towards a static-folder. Will try to fix this
-issue at some point in the future.
+Workaround for grunt/yeoman being very non-friendly towards a single
+static-folder. Will try to fix this issue at some point in the future.
 """
 @app.route('/<regex("styles|scripts|views|images|font"):start>/<path:path>')
 def static_stuff(start, path):
